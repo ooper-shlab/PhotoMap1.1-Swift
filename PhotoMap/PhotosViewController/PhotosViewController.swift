@@ -73,7 +73,7 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
             self.title = "Photos (\(self.modelController.currentPageIndex + 1) of \(self.modelController.pageData!.count))"
         } else {
             let viewController = self.modelController.pageData?[self.modelController.currentPageIndex]
-                as PhotoAnnotation? //Original sample code's bug?
+                as! PhotoAnnotation? //Original sample code's bug?
             self.title = viewController?.title
         }
     }
@@ -95,7 +95,7 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
         let storyboard = UIStoryboard(name: "Storyboard", bundle: nil)
         let startingViewController = self.modelController.viewControllerAtIndex(0, storyboard: storyboard)!
         let viewControllers: NSArray = [startingViewController]
-        self.pageViewController!.setViewControllers(viewControllers,
+        self.pageViewController!.setViewControllers(viewControllers as! [AnyObject],
             direction: .Forward,
             animated: false,
             completion: nil)
@@ -132,9 +132,9 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
     func pageViewController(pageViewController: UIPageViewController, spineLocationForInterfaceOrientation orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation {
         
         // Set the spine position to "min" and the page view controller's view controllers array to contain just one view controller. Setting the spine position to 'UIPageViewControllerSpineLocationMid' in landscape orientation sets the doubleSided property to YES, so set it to NO here.
-        let currentViewController = self.pageViewController!.viewControllers[0] as UIViewController
+        let currentViewController = self.pageViewController!.viewControllers[0] as! UIViewController
         let viewControllers: NSArray = [currentViewController]
-        self.pageViewController!.setViewControllers(viewControllers,
+        self.pageViewController!.setViewControllers(viewControllers as! [AnyObject],
             direction: .Forward,
             animated: true,
             completion: nil)

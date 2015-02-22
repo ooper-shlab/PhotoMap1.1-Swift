@@ -86,7 +86,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         queue.maxConcurrentOperationCount = 8
         
         let photoPaths = NSBundle.mainBundle().pathsForResourcesOfType("jpg", inDirectory: path)
-        for photoPath in photoPaths as [String] {
+        for photoPath in photoPaths as! [String] {
             queue.addOperationWithBlock {
                 let imageData = NSData(contentsOfFile: photoPath)!
                 let dataProvider = CGDataProviderCreateWithCFData(imageData as CFDataRef)
@@ -94,15 +94,15 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                 let imageProperties: NSDictionary = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil)
                 
                 // check if the image is geotagged
-                let gpsInfo = imageProperties[kCGImagePropertyGPSDictionary as NSString] as NSDictionary?
+                let gpsInfo = imageProperties[kCGImagePropertyGPSDictionary as NSString] as! NSDictionary?
                 if gpsInfo != nil {
                     let latitude = gpsInfo![kCGImagePropertyGPSLatitude as NSString]!.doubleValue
                     let longitude = gpsInfo![kCGImagePropertyGPSLongitude as NSString]!.doubleValue
                     var coord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                    if gpsInfo![kCGImagePropertyGPSLatitudeRef as NSString] as String? == "S" {
+                    if gpsInfo![kCGImagePropertyGPSLatitudeRef as NSString] as! String? == "S" {
                         coord.latitude = -coord.latitude
                     }
-                    if gpsInfo![kCGImagePropertyGPSLongitudeRef as NSString] as String? == "W" {
+                    if gpsInfo![kCGImagePropertyGPSLongitudeRef as NSString] as! String? == "W" {
                         coord.longitude = -coord.longitude
                     }
                     
@@ -135,7 +135,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
             self.photos = photos
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.allAnnotationsMapView!.addAnnotations(self.photos)
+                self.allAnnotationsMapView!.addAnnotations(self.photos as! [AnyObject])
                 self.updateVisibleAnnotations()
                 
                 loadingStatus.removeFromSuperviewWithFade()
@@ -148,7 +148,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         // first, see if one of the annotations we were already showing is in this mapRect
         let visibleAnnotatonsInBucket = self.mapView!.annotationsInMapRect(gridMapRect)
         let annotationsForGridSet = annotations.objectsPassingTest {obj, stop in
-            let returnValue = visibleAnnotatonsInBucket.containsObject(obj)
+            let returnValue = visibleAnnotatonsInBucket.contains(obj as! NSObject)
             if returnValue {
                 stop.memory = true
             }
@@ -156,15 +156,15 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         }
         
         if annotationsForGridSet.count != 0 {
-            return annotationsForGridSet.anyObject() as MKAnnotation
+            return annotationsForGridSet.first as! MKAnnotation
         }
         
         // otherwise, sort the annotations based on their distance from the center of the grid square,
         // then choose the one closest to the center to show
         let centerMapPoint = MKMapPointMake(MKMapRectGetMidX(gridMapRect), MKMapRectGetMidY(gridMapRect))
         let sortedAnnotations = annotations.allObjects.sorted {obj1, obj2 in
-            let mapPoint1 = MKMapPointForCoordinate((obj1 as MKAnnotation).coordinate)
-            let mapPoint2 = MKMapPointForCoordinate((obj2 as MKAnnotation).coordinate)
+            let mapPoint1 = MKMapPointForCoordinate((obj1 as! MKAnnotation).coordinate)
+            let mapPoint2 = MKMapPointForCoordinate((obj2 as! MKAnnotation).coordinate)
             
             let distance1 = MKMetersBetweenMapPoints(mapPoint1, centerMapPoint)
             let distance2 = MKMetersBetweenMapPoints(mapPoint2, centerMapPoint)
@@ -172,7 +172,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
             return distance1 < distance2
         }
         
-        return sortedAnnotations[0] as MKAnnotation
+        return sortedAnnotations[0] as! MKAnnotation
     }
     
     private func updateVisibleAnnotations() {
@@ -213,33 +213,35 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                 let visibleAnnotationsInBucket = self.mapView!.annotationsInMapRect(gridMapRect)
                 
                 // we only care about PhotoAnnotations
-                let filteredAnnotationsInBucket = allAnnotationsInBucket?.objectsPassingTest {obj, stop in
+                var filteredAnnotationsInBucket = allAnnotationsInBucket == nil ?
+                    Set<NSObject>()
+                : Set(lazy(allAnnotationsInBucket!).filter {obj in
                     obj is PhotoAnnotation
-                    }.mutableCopy() as NSMutableSet?
+                    })
                 
-                if (filteredAnnotationsInBucket?.count ?? 0) > 0 {
-                    let annotationForGrid = self.annotationInGrid(gridMapRect, usingAnnotations: filteredAnnotationsInBucket!) as PhotoAnnotation
+                if filteredAnnotationsInBucket.count > 0 {
+                    let annotationForGrid = self.annotationInGrid(gridMapRect, usingAnnotations: filteredAnnotationsInBucket) as! PhotoAnnotation
                     
-                    filteredAnnotationsInBucket!.removeObject(annotationForGrid)
+                    filteredAnnotationsInBucket.remove(annotationForGrid)
                     
                     // give the annotationForGrid a reference to all the annotations it will represent
-                    annotationForGrid.containedAnnotations = filteredAnnotationsInBucket!.allObjects
+                    annotationForGrid.containedAnnotations = Array(filteredAnnotationsInBucket)
                     
                     self.mapView!.addAnnotation(annotationForGrid)
                     
-                    for _annotation in filteredAnnotationsInBucket! {
-                        let annotation = _annotation as PhotoAnnotation
+                    for _annotation in filteredAnnotationsInBucket {
+                        let annotation = _annotation as! PhotoAnnotation
                         // give all the other annotations a reference to the one which is representing them
                         annotation.clusterAnnotation = annotationForGrid
                         annotation.containedAnnotations = nil
                         
                         // remove annotations which we've decided to cluster
-                        if visibleAnnotationsInBucket.containsObject(annotation) {
+                        if visibleAnnotationsInBucket.contains(annotation) {
                             let actualCoordinate = annotation.coordinate
                             UIView.animateWithDuration(0.3, animations: {
-                                annotation.coordinate = annotation.clusterAnnotation!.coordinate
-                                }) {finished in
-                                    annotation.coordinate = actualCoordinate
+                                annotation.setCoordinate(annotation.clusterAnnotation!.coordinate)
+                            }) {finished in
+                                    annotation.setCoordinate(actualCoordinate)
                                     self.mapView!.removeAnnotation(annotation)
                             }
                         }
@@ -293,12 +295,12 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(mapView: MKMapView!, didAddAnnotationViews views: [AnyObject]!) {
         
-        for annotationView in views as [MKAnnotationView] {
+        for annotationView in views as! [MKAnnotationView] {
             if !(annotationView.annotation is PhotoAnnotation) {
                 continue
             }
             
-            let annotation = annotationView.annotation as PhotoAnnotation
+            let annotation = annotationView.annotation as! PhotoAnnotation
             
             if annotation.clusterAnnotation != nil {
                 // animate the annotation from it's old container's coordinate, to its actual coordinate
@@ -310,10 +312,10 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                 // to get the containerCoordinate)
                 annotation.clusterAnnotation = nil
                 
-                annotation.coordinate = containerCoordinate
+                annotation.setCoordinate(containerCoordinate)
                 
                 UIView.animateWithDuration(0.3) {
-                    annotation.coordinate = actualCoordinate
+                    annotation.setCoordinate(actualCoordinate)
                 }
             }
         }
@@ -328,14 +330,14 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         }
         
         if annotation is PhotoAnnotation {
-            var annotationView = self.mapView!.dequeueReusableAnnotationViewWithIdentifier(annotationIdentifier) as MKPinAnnotationView?
+            var annotationView = self.mapView!.dequeueReusableAnnotationViewWithIdentifier(annotationIdentifier) as! MKPinAnnotationView?
             if annotationView == nil {
                 annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: annotationIdentifier)
             }
             
             annotationView!.canShowCallout = true
             
-            let disclosureButton = UIButton.buttonWithType(.DetailDisclosure) as UIButton
+            let disclosureButton = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
             annotationView!.rightCalloutAccessoryView = disclosureButton
             
             return annotationView
@@ -347,10 +349,10 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     // user tapped the call out accessory 'i' button
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
         
-        let annotation = view.annotation as PhotoAnnotation
+        let annotation = view.annotation as! PhotoAnnotation
         
         let photosToShow = NSMutableArray(object: annotation)
-        photosToShow.addObjectsFromArray(annotation.containedAnnotations!)
+        photosToShow.addObjectsFromArray(annotation.containedAnnotations! as! [AnyObject])
         
         let viewController = PhotosViewController()
         viewController.edgesForExtendedLayout = .None
@@ -362,7 +364,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
         
         if view.annotation is PhotoAnnotation {
-            let annotation = view.annotation as PhotoAnnotation
+            let annotation = view.annotation as! PhotoAnnotation
             annotation.updateSubtitleIfNeeded()
         }
     }

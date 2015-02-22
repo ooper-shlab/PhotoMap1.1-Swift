@@ -77,14 +77,10 @@ class LoadingStatus : UIView {
         
         let attrs: NSDictionary = [NSFontAttributeName : loadingFont]
         
-        //### workaround
-        let options = NSStringDrawingOptions.UsesLineFragmentOrigin.rawValue |                NSStringDrawingOptions.UsesFontLeading.rawValue
         let rect = loadingString.boundingRectWithSize(CGSizeMake(CGRectGetWidth(frame), CGRectGetHeight(frame)),
-            //### workaround
-            options: unsafeBitCast(options, NSStringDrawingOptions.self),
-            //### We cannot pass bitwise-ORed value.
-            //            options: NSStringDrawingOptions.UsesLineFragmentOrigin|NSStringDrawingOptions.UsesFontLeading,
-            attributes: attrs,
+            //### We don't need no more workarounds in Swift 1.2 !!!
+            options: .UsesLineFragmentOrigin | .UsesFontLeading,
+            attributes: attrs as! [NSObject : AnyObject],
             context: nil)
         let labelSize = rect.size
         

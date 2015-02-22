@@ -83,8 +83,8 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         
         // vreate a new view controller and pass suitable data
         let dataViewController = storyboard.instantiateViewControllerWithIdentifier("DataViewController")
-            as DataViewController
-        dataViewController.dataObject = (self.pageData![index] as PhotoAnnotation)
+            as! DataViewController
+        dataViewController.dataObject = (self.pageData![index] as! PhotoAnnotation)
         return dataViewController
     }
     
@@ -103,14 +103,14 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     //#MARK: - UIPageViewControllerDataSource
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        let photosViewController = pageViewController.delegate as PhotosViewController?
+        let photosViewController = pageViewController.delegate as! PhotosViewController?
         
         if !(photosViewController?.pageAnimationFinished ?? false) {
             // we are still animating don't return a previous view controller too soon
             return nil
         }
         
-        var index = self.indexOfViewController(viewController as DataViewController)
+        var index = self.indexOfViewController(viewController as! DataViewController)
         if index == 0 || index == NSNotFound {
             // we are at the first page, don't go back any further
             return nil
@@ -123,14 +123,14 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        let photosViewController = pageViewController.delegate as PhotosViewController?
+        let photosViewController = pageViewController.delegate as! PhotosViewController?
         
         if !(photosViewController?.pageAnimationFinished ?? false) {
             // we are still animating don't return a next view controller too soon
             return nil
         }
         
-        var index = self.indexOfViewController(viewController as DataViewController)
+        var index = self.indexOfViewController(viewController as! DataViewController)
         if index == NSNotFound {
             // we are at the last page, don't go back any further
             return nil

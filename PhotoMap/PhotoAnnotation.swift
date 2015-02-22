@@ -70,7 +70,13 @@ class PhotoAnnotation: NSObject, MKAnnotation {
         get { return getTitle() }
     }
     var subtitle: String?
-    dynamic var coordinate: CLLocationCoordinate2D  //must be KVO compliant. (see MKAnnotation)
+    var _coordinate: CLLocationCoordinate2D
+    dynamic var coordinate: CLLocationCoordinate2D {  //must be KVO compliant. (see MKAnnotation)
+        get { return _coordinate }
+    }
+    func setCoordinate(newCoordinate: CLLocationCoordinate2D) {
+        self._coordinate = newCoordinate
+    }
 
     var clusterAnnotation: PhotoAnnotation?
     var containedAnnotations: NSArray?
@@ -79,7 +85,7 @@ class PhotoAnnotation: NSObject, MKAnnotation {
 
         self.imagePath = anImagePath
         self._title = aTitle
-        self.coordinate = aCoordinate
+        self._coordinate = aCoordinate
         super.init()
     }
 
@@ -129,7 +135,7 @@ class PhotoAnnotation: NSObject, MKAnnotation {
             let geocoder = CLGeocoder()
             geocoder.reverseGeocodeLocation(location) {placemarks, error in
                 if placemarks.count > 0 {
-                    let placemark = placemarks[0] as CLPlacemark
+                    let placemark = placemarks[0] as! CLPlacemark
                     self.subtitle = "Near \(self.stringForPlacemark(placemark))"
                 }
             }
