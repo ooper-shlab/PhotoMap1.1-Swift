@@ -57,7 +57,7 @@ import UIKit
 import MapKit
 import ImageIO
 
-func synchronized(object: AnyObject, block: () -> Void) {
+func synchronized(object: AnyObject, @noescape block: () -> Void) {
     objc_sync_enter(object)
     block()
     objc_sync_exit(object)
