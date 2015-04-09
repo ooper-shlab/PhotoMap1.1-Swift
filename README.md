@@ -2,8 +2,6 @@
 
 Translated by OOPer in cooperation with shlab.jp, on 2014/12/11.
 
-Adapted to Swift 1.2 on 2015/2/22.
-
 Based on
 <https://developer.apple.com/library/ios/samplecode/PhotoMap/Introduction/Intro.html#//apple_ref/doc/uid/DTS40011109>
 2014-11-17.
@@ -15,4 +13,4 @@ You should not contact to Apple or SHLab(jp) about any faults caused by my trans
 ===========================================================================
 BUILD REQUIREMENTS:
 
-Xcode 6.3 beta, iOS SDK 8.3
+Xcode 6.3, iOS SDK 8.3
