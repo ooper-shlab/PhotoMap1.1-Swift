@@ -54,6 +54,7 @@
  */
 
 import UIKit
+import Foundation
 
 @objc(LoadingStatus)
 class LoadingStatus : UIView {
@@ -71,16 +72,15 @@ class LoadingStatus : UIView {
     
     override init(frame: CGRect) {
         
-        let loadingString = "Loading Photos…"
+        let loadingString: NSString = "Loading Photos…"
         
         let loadingFont = UIFont.boldSystemFontOfSize(17.0)
         
-        let attrs: NSDictionary = [NSFontAttributeName : loadingFont]
-        
+        let attrs: [String : AnyObject] = [NSFontAttributeName : loadingFont]
+
         let rect = loadingString.boundingRectWithSize(CGSizeMake(CGRectGetWidth(frame), CGRectGetHeight(frame)),
-            //### We don't need no more workarounds in Swift 1.2 !!!
-            options: .UsesLineFragmentOrigin | .UsesFontLeading,
-            attributes: attrs as! [NSObject : AnyObject],
+            options: [.UsesLineFragmentOrigin, .UsesFontLeading],
+            attributes: attrs,
             context: nil)
         let labelSize = rect.size
         
@@ -89,7 +89,7 @@ class LoadingStatus : UIView {
         loadingLabel = UILabel(frame: CGRectMake(centerX, centerY, labelSize.width, labelSize.height))
         self.loadingLabel.backgroundColor = UIColor.clearColor()
         self.loadingLabel.textColor = UIColor.whiteColor()
-        self.loadingLabel.text = loadingString
+        self.loadingLabel.text = loadingString as String
         self.loadingLabel.font = loadingFont
         
         progress = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)

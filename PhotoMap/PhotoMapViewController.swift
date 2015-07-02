@@ -86,12 +86,12 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         queue.maxConcurrentOperationCount = 8
         
         let photoPaths = NSBundle.mainBundle().pathsForResourcesOfType("jpg", inDirectory: path)
-        for photoPath in photoPaths as! [String] {
+        for photoPath in photoPaths as [String] {
             queue.addOperationWithBlock {
                 let imageData = NSData(contentsOfFile: photoPath)!
                 let dataProvider = CGDataProviderCreateWithCFData(imageData as CFDataRef)
-                let imageSource = CGImageSourceCreateWithDataProvider(dataProvider, nil)
-                let imageProperties: NSDictionary = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil)
+                let imageSource = CGImageSourceCreateWithDataProvider(dataProvider!, nil)
+                let imageProperties: NSDictionary = CGImageSourceCopyPropertiesAtIndex(imageSource!, 0, nil)!
                 
                 // check if the image is geotagged
                 let gpsInfo = imageProperties[kCGImagePropertyGPSDictionary as NSString] as! NSDictionary?
@@ -135,7 +135,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
             self.photos = photos
             
             dispatch_async(dispatch_get_main_queue()) {
-                self.allAnnotationsMapView!.addAnnotations(self.photos as! [AnyObject])
+                self.allAnnotationsMapView!.addAnnotations(self.photos as! [MKAnnotation])
                 self.updateVisibleAnnotations()
                 
                 loadingStatus.removeFromSuperviewWithFade()
@@ -162,7 +162,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         // otherwise, sort the annotations based on their distance from the center of the grid square,
         // then choose the one closest to the center to show
         let centerMapPoint = MKMapPointMake(MKMapRectGetMidX(gridMapRect), MKMapRectGetMidY(gridMapRect))
-        let sortedAnnotations = annotations.allObjects.sorted {obj1, obj2 in
+        let sortedAnnotations = annotations.allObjects.sort {obj1, obj2 in
             let mapPoint1 = MKMapPointForCoordinate((obj1 as! MKAnnotation).coordinate)
             let mapPoint2 = MKMapPointForCoordinate((obj2 as! MKAnnotation).coordinate)
             
@@ -288,14 +288,14 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     
     //#MARK: - MKMapViewDelegate
     
-    func mapView(mapView: MKMapView!, regionDidChangeAnimated animated: Bool) {
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
         self.updateVisibleAnnotations()
     }
     
-    func mapView(mapView: MKMapView!, didAddAnnotationViews views: [AnyObject]!) {
+    func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView]) {
         
-        for annotationView in views as! [MKAnnotationView] {
+        for annotationView in views as [MKAnnotationView] {
             if !(annotationView.annotation is PhotoAnnotation) {
                 continue
             }
@@ -321,7 +321,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    func mapView(aMapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(aMapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let annotationIdentifier = "Photo"
         
@@ -337,7 +337,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
             
             annotationView!.canShowCallout = true
             
-            let disclosureButton = UIButton.buttonWithType(.DetailDisclosure) as! UIButton
+            let disclosureButton = UIButton(type: .DetailDisclosure)
             annotationView!.rightCalloutAccessoryView = disclosureButton
             
             return annotationView
@@ -347,12 +347,12 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     // user tapped the call out accessory 'i' button
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
         let annotation = view.annotation as! PhotoAnnotation
         
         let photosToShow = NSMutableArray(object: annotation)
-        photosToShow.addObjectsFromArray(annotation.containedAnnotations! as! [AnyObject])
+        photosToShow.addObjectsFromArray(annotation.containedAnnotations! as [AnyObject])
         
         let viewController = PhotosViewController()
         viewController.edgesForExtendedLayout = .None
@@ -361,7 +361,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         self.navigationController!.pushViewController(viewController, animated: true)
     }
     
-    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         
         if view.annotation is PhotoAnnotation {
             let annotation = view.annotation as! PhotoAnnotation

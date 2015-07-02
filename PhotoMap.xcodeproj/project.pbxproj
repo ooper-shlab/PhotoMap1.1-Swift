@@ -36,6 +36,7 @@
 		D7599CC61A217B9F001ADC51 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7599CC21A217771001ADC51 /* ModelController.swift */; };
 		D7599CC71A218008001ADC51 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7599CC01A21766B001ADC51 /* PhotosViewController.swift */; };
 		D7599CC81A2189D0001ADC51 /* PhotoMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7599CBE1A2175F2001ADC51 /* PhotoMapViewController.swift */; };
+		D75B6C7A1B455BED0057315E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D75B6C791B455BED0057315E /* LaunchScreen.xib */; };
 		D7CFCFB91A39C4EF0075BB4A /* PhotoMapAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CFCFB81A39C4EF0075BB4A /* PhotoMapAppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -98,6 +99,7 @@
 		D7599CC01A21766B001ADC51 /* PhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		D7599CC21A217771001ADC51 /* ModelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
 		D7599CC41A2177B7001ADC51 /* DataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataViewController.swift; sourceTree = "<group>"; };
+		D75B6C791B455BED0057315E /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		D7AE538F1A865A660085AA3B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D7CFCFB81A39C4EF0075BB4A /* PhotoMapAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoMapAppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -171,6 +173,7 @@
 		433F55951391F151004304E6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D75B6C791B455BED0057315E /* LaunchScreen.xib */,
 				53F2A6AF199A78DC00AA02B7 /* Storyboard.storyboard */,
 				433F55961391F151004304E6 /* PhotoMap-Info.plist */,
 				433F55971391F151004304E6 /* InfoPlist.strings */,
@@ -236,7 +239,8 @@
 		433F55811391F151004304E6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Apple, Inc.";
 			};
 			buildConfigurationList = 433F55841391F151004304E6 /* Build configuration list for PBXProject "PhotoMap" */;
@@ -261,6 +265,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D75B6C7A1B455BED0057315E /* LaunchScreen.xib in Resources */,
 				433F55991391F151004304E6 /* InfoPlist.strings in Resources */,
 				53F2A6B1199A78DC00AA02B7 /* Storyboard.storyboard in Resources */,
 				53DF9986199543D000D6838C /* Images.xcassets in Resources */,
@@ -318,6 +323,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -380,6 +386,7 @@
 				INFOPLIST_FILE = "PhotoMap/PhotoMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -402,6 +409,7 @@
 				INFOPLIST_FILE = "PhotoMap/PhotoMap-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				VALIDATE_PRODUCT = YES;

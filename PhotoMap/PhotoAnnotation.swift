@@ -66,7 +66,7 @@ class PhotoAnnotation: NSObject, MKAnnotation {
     }
     var imagePath: String?
     private var _title: String
-    var title: String {
+    var title: String? {
         get { return getTitle() }
     }
     var subtitle: String?
@@ -134,8 +134,8 @@ class PhotoAnnotation: NSObject, MKAnnotation {
             let location = CLLocation(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
             let geocoder = CLGeocoder()
             geocoder.reverseGeocodeLocation(location) {placemarks, error in
-                if placemarks.count > 0 {
-                    let placemark = placemarks[0] as! CLPlacemark
+                if placemarks?.count ?? 0 > 0 {
+                    let placemark = placemarks![0]
                     self.subtitle = "Near \(self.stringForPlacemark(placemark))"
                 }
             }
