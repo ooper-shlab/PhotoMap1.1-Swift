@@ -274,7 +274,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
         self.populateWorldWithAllPhotoAnnotations()
     }
     
-    @IBAction private func zoomToCherryLake(AnyObject) {
+    @IBAction private func zoomToCherryLake(_: AnyObject) {
         
         // clear any annotations in preparation for zooming
         self.mapView!.removeAnnotations(self.mapView!.annotations)

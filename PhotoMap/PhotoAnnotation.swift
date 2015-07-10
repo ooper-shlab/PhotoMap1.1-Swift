@@ -110,18 +110,18 @@ class PhotoAnnotation: NSObject, MKAnnotation {
 
         var string = ""
         if placemark.locality != nil {
-            string += placemark.locality
+            string += placemark.locality!
         }
 
         if placemark.administrativeArea != nil {
             if !string.isEmpty {
                 string += ", "
             }
-            string += placemark.administrativeArea
+            string += placemark.administrativeArea!
         }
 
         if string.isEmpty && placemark.name != nil {
-            string += placemark.name
+            string += placemark.name!
         }
 
         return string
