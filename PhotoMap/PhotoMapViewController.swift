@@ -106,7 +106,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                         coord.longitude = -coord.longitude
                     }
                     
-                    let fileName = photoPath.lastPathComponent.stringByDeletingPathExtension
+                    let fileName = ((photoPath as NSString).lastPathComponent as NSString).stringByDeletingPathExtension //### phew!!!
                     let photo = PhotoAnnotation(imagePath: photoPath, title: fileName, coordinate: coord)
                     
                     synchronized(photos) {

@@ -67,8 +67,8 @@ class DataViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // we want for the title to only be the image name (obtained from the file system path)
-        var title = self.dataObject?.imagePath?.lastPathComponent
-        title = title?.stringByDeletingPathExtension
+        var title = (self.dataObject?.imagePath as NSString?)?.lastPathComponent
+        title = (title as NSString?)?.stringByDeletingPathExtension
         self.title = title
         
         self.imageView?.image = self.dataObject?.image
