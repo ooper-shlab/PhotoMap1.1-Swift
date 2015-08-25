@@ -215,7 +215,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                 // we only care about PhotoAnnotations
                 var filteredAnnotationsInBucket = allAnnotationsInBucket == nil ?
                     Set<NSObject>()
-                : Set(lazy(allAnnotationsInBucket!).filter {obj in
+                : Set(allAnnotationsInBucket!.lazy.filter {obj in
                     obj is PhotoAnnotation
                     })
                 
