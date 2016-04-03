@@ -116,7 +116,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
             return nil
         }
         
-        index--
+        index -= 1
         currentPageIndex = index
         
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
@@ -136,7 +136,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
             return nil
         }
         
-        index++
+        index += 1
         currentPageIndex = index
         
         if index == (self.pageData?.count ?? 0) {
