@@ -74,12 +74,12 @@ class PhotoAnnotation: NSObject, MKAnnotation {
     dynamic var coordinate: CLLocationCoordinate2D {  //must be KVO compliant. (see MKAnnotation)
         get { return _coordinate }
     }
-    func setCoordinate(newCoordinate: CLLocationCoordinate2D) {
+    func setCoordinate(_ newCoordinate: CLLocationCoordinate2D) {
         self._coordinate = newCoordinate
     }
 
     var clusterAnnotation: PhotoAnnotation?
-    var containedAnnotations: NSArray?
+    var containedAnnotations: [PhotoAnnotation] = []
 
     init(imagePath anImagePath: String, title aTitle: String, coordinate aCoordinate: CLLocationCoordinate2D) {
 
@@ -91,8 +91,8 @@ class PhotoAnnotation: NSObject, MKAnnotation {
 
     private func getTitle() -> String {
 
-        if (self.containedAnnotations?.count ?? 0) > 0 {
-            return String(format: "%zd Photos", self.containedAnnotations!.count + 1)
+        if self.containedAnnotations.count > 0 {
+            return String(format: "%zd Photos", self.containedAnnotations.count + 1)
         }
 
         return _title
@@ -106,7 +106,7 @@ class PhotoAnnotation: NSObject, MKAnnotation {
         return _image
     }
 
-    private func stringForPlacemark(placemark: CLPlacemark) -> String {
+    private func stringForPlacemark(_ placemark: CLPlacemark) -> String {
 
         var string = ""
         if placemark.locality != nil {

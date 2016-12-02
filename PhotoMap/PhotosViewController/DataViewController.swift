@@ -62,13 +62,13 @@ class DataViewController: UIViewController {
     
     @IBOutlet private weak var imageView: UIImageView?
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
         // we want for the title to only be the image name (obtained from the file system path)
         var title = (self.dataObject?.imagePath as NSString?)?.lastPathComponent
-        title = (title as NSString?)?.stringByDeletingPathExtension
+        title = (title as NSString?)?.deletingPathExtension
         self.title = title
         
         self.imageView?.image = self.dataObject?.image

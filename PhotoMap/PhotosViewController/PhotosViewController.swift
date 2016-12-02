@@ -59,7 +59,7 @@ import UIKit
 class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
     
     var pageViewController: UIPageViewController?
-    var photosToShow: NSArray?
+    var photosToShow: [PhotoAnnotation] = []
     var pageAnimationFinished: Bool = false
     
     private lazy var modelController: ModelController = ModelController()
@@ -69,12 +69,11 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
     
     private func updateNavBarTitle() {
         
-        if (self.modelController.pageData?.count ?? 0) > 1 {
-            self.title = "Photos (\(self.modelController.currentPageIndex + 1) of \(self.modelController.pageData!.count))"
+        if self.modelController.pageData.count > 1 {
+            self.title = "Photos (\(self.modelController.currentPageIndex + 1) of \(self.modelController.pageData.count))"
         } else {
-            let viewController = self.modelController.pageData?[self.modelController.currentPageIndex]
-                as! PhotoAnnotation? //Original sample code's bug?
-            self.title = viewController?.title
+            let viewController = self.modelController.pageData[self.modelController.currentPageIndex] //Original sample code's bug?
+            self.title = viewController.title
         }
     }
     
@@ -85,8 +84,8 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         // Configure the page view controller and add it as a child view controller.
         self.pageViewController =
-            UIPageViewController(transitionStyle: .PageCurl,
-                navigationOrientation: .Horizontal,
+            UIPageViewController(transitionStyle: .pageCurl,
+                navigationOrientation: .horizontal,
                 options: nil)
         self.pageViewController!.delegate = self
         
@@ -96,7 +95,7 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
         let startingViewController = self.modelController.viewControllerAtIndex(0, storyboard: storyboard)!
         let viewControllers = [startingViewController]
         self.pageViewController!.setViewControllers(viewControllers,
-            direction: .Forward,
+            direction: .forward,
             animated: false,
             completion: nil)
         
@@ -106,7 +105,7 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
         
         self.addChildViewController(self.pageViewController!)
         self.view.addSubview(self.pageViewController!.view)
-        self.pageViewController!.didMoveToParentViewController(self)
+        self.pageViewController!.didMove(toParentViewController: self)
         
         // add the page view controller's gesture recognizers to the book view controller's view
         // so that the gestures are started more easily
@@ -121,7 +120,7 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
     
     //#MARK: - UIPageViewControllerDelegate
     
-    func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
         // update the nav bar title showing which index we are displaying
         self.updateNavBarTitle()
@@ -129,21 +128,21 @@ class PhotosViewController: UIViewController, UIPageViewControllerDelegate {
         pageAnimationFinished = true
     }
     
-    func pageViewController(pageViewController: UIPageViewController, spineLocationForInterfaceOrientation orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation {
+    func pageViewController(_ pageViewController: UIPageViewController, spineLocationFor orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation {
         
         // Set the spine position to "min" and the page view controller's view controllers array to contain just one view controller. Setting the spine position to 'UIPageViewControllerSpineLocationMid' in landscape orientation sets the doubleSided property to YES, so set it to NO here.
         let currentViewController = self.pageViewController!.viewControllers![0]
         let viewControllers = [currentViewController]
         self.pageViewController!.setViewControllers(viewControllers,
-            direction: .Forward,
+            direction: .forward,
             animated: true,
             completion: nil)
         
-        self.pageViewController!.doubleSided = false
-        return .Min
+        self.pageViewController!.isDoubleSided = false
+        return .min
     }
     
-    func pageViewController(pageViewController: UIPageViewController, willTransitionToViewControllers pendingViewControllers: [UIViewController]) {
+    func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         pageAnimationFinished = false
     }
     

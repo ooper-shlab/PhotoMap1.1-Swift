@@ -65,38 +65,38 @@ class LoadingStatus : UIView {
     
     //MARK: -
     
-    class func defaultLoadingStatusWithWidth(width: CGFloat) -> LoadingStatus {
+    class func defaultLoadingStatusWithWidth(_ width: CGFloat) -> LoadingStatus {
         
-        return LoadingStatus(frame: CGRectMake(0.0, 0.0, width, 40.0))
+        return LoadingStatus(frame: CGRect(x: 0.0, y: 0.0, width: width, height: 40.0))
     }
     
     override init(frame: CGRect) {
         
         let loadingString: NSString = "Loading Photos…"
         
-        let loadingFont = UIFont.boldSystemFontOfSize(17.0)
+        let loadingFont = UIFont.boldSystemFont(ofSize: 17.0)
         
         let attrs: [String : AnyObject] = [NSFontAttributeName : loadingFont]
 
-        let rect = loadingString.boundingRectWithSize(CGSizeMake(CGRectGetWidth(frame), CGRectGetHeight(frame)),
-            options: [.UsesLineFragmentOrigin, .UsesFontLeading],
+        let rect = loadingString.boundingRect(with: CGSize(width: frame.width, height: frame.height),
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
             attributes: attrs,
             context: nil)
         let labelSize = rect.size
         
-        let centerX = floor((CGRectGetWidth(frame) / 2.0) - (labelSize.width / 2.0))
-        let centerY = floor((CGRectGetHeight(frame) / 2.0) - (labelSize.height / 2.0))
-        loadingLabel = UILabel(frame: CGRectMake(centerX, centerY, labelSize.width, labelSize.height))
-        self.loadingLabel.backgroundColor = UIColor.clearColor()
-        self.loadingLabel.textColor = UIColor.whiteColor()
+        let centerX = floor((frame.width / 2.0) - (labelSize.width / 2.0))
+        let centerY = floor((frame.height / 2.0) - (labelSize.height / 2.0))
+        loadingLabel = UILabel(frame: CGRect(x: centerX, y: centerY, width: labelSize.width, height: labelSize.height))
+        self.loadingLabel.backgroundColor = UIColor.clear
+        self.loadingLabel.textColor = UIColor.white
         self.loadingLabel.text = loadingString as String
         self.loadingLabel.font = loadingFont
         
-        progress = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+        progress = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
         super.init(frame: frame)
         self.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4)
         var progressFrame = self.progress.frame
-        progressFrame.origin.x = centerX - CGRectGetWidth(progressFrame) - 8.0
+        progressFrame.origin.x = centerX - progressFrame.width - 8.0
         progressFrame.origin.y = centerY
         self.progress.frame = progressFrame
         
@@ -109,7 +109,7 @@ class LoadingStatus : UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func willRemoveSubview(subview: UIView) {
+    override func willRemoveSubview(_ subview: UIView) {
         
         if subview === self.progress {
             self.progress.stopAnimating()
@@ -127,13 +127,13 @@ class LoadingStatus : UIView {
     
     func removeFromSuperviewWithFade() {
         
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.alpha = 0.0
-            }) {finished in
+            }, completion: {finished in
                 if finished {
                     self.removeFromSuperview()
                 }
-        }
+        }) 
     }
     
 }

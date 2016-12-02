@@ -58,8 +58,8 @@ import UIKit
 @objc(ModelController)
 class ModelController: NSObject, UIPageViewControllerDataSource {
     
-    var pageData: NSArray?
-    var currentPageIndex: NSInteger
+    var pageData: [PhotoAnnotation] = []
+    var currentPageIndex: Int
     
     /*
     A controller object that manages a simple model -- a collection of map annotations
@@ -75,34 +75,34 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         super.init()
     }
     
-    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> DataViewController? {
+    func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> DataViewController? {
         // return the data view controller for the given index
-        if index >= (self.pageData?.count ?? 0) {
+        if index >= self.pageData.count {
             return nil
         }
         
         // vreate a new view controller and pass suitable data
-        let dataViewController = storyboard.instantiateViewControllerWithIdentifier("DataViewController")
+        let dataViewController = storyboard.instantiateViewController(withIdentifier: "DataViewController")
             as! DataViewController
-        dataViewController.dataObject = (self.pageData![index] as! PhotoAnnotation)
+        dataViewController.dataObject = self.pageData[index]
         return dataViewController
     }
     
-    func indexOfViewController(viewController: DataViewController) -> Int {
+    func indexOfViewController(_ viewController: DataViewController) -> Int {
         // Return the index of the given data view controller.
         // For simplicity, this implementation uses a static array of model objects and the
         // view controller stores the model object; you can therefore use the model object to identify the index.
         //
-        if pageData == nil || viewController.dataObject == nil {
+        if viewController.dataObject == nil {
             return NSNotFound
         }   //This may never happen?
-        return self.pageData!.indexOfObject(viewController.dataObject!)
+        return self.pageData.index(of: viewController.dataObject!)!
     }
     
     
     //#MARK: - UIPageViewControllerDataSource
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let photosViewController = pageViewController.delegate as! PhotosViewController?
         
         if !(photosViewController?.pageAnimationFinished ?? false) {
@@ -122,7 +122,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
     
-    func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         let photosViewController = pageViewController.delegate as! PhotosViewController?
         
         if !(photosViewController?.pageAnimationFinished ?? false) {
@@ -139,7 +139,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         index += 1
         currentPageIndex = index
         
-        if index == (self.pageData?.count ?? 0) {
+        if index == self.pageData.count {
             return nil
         }
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
