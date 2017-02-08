@@ -1,16 +1,22 @@
 # PhotoMap
+ 
+## Description
+ 
+The sample demonstrates how to load and display geotagged photos as MapKit annotations. It further demonstrates how to cluster multiple annotations together to reduce on-screen clutter.
 
-Translated by OOPer in cooperation with shlab.jp, on 2014/12/11.
+This project was presented as a demo for WWDC 2011 session "Visualizing Information Geographically with MapKit”.
 
-Based on
-<https://developer.apple.com/library/ios/samplecode/PhotoMap/Introduction/Intro.html#//apple_ref/doc/uid/DTS40011109>
-2014-11-17.
+To run it, double click the first annotation or tap the "Go" button in the navigation bar.
 
-As this is a line-by-line translation from the original sample code, "redistribute the Apple Software in its entirety and without modifications" would apply. See license terms in each file .
-Some faults caused by my translation may exist. Not all features tested.
-You should not contact to Apple or SHLab(jp) about any faults caused by my translation.
+## Requirements
 
-===========================================================================
-BUILD REQUIREMENTS:
+### Build
 
-Xcode 8.1, iOS SDK 10
+iOS SDK 10.2 or later.
+ 
+### Runtime
+ 
+iOS 10.0 or later
+
+
+Copyright (C) 2011-2017 Apple Inc. All rights reserved.
