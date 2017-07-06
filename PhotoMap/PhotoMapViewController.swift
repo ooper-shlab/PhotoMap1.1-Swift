@@ -27,7 +27,7 @@ func synchronized(_ object: AnyObject, block: () -> Void) {
 @objc(PhotoMapViewController)
 class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     
-    private var photos: NSArray?
+    private var photos: [PhotoAnnotation] = []
     private var allAnnotationsMapView: MKMapView?
     
     @IBOutlet private var mapView: MKMapView?
@@ -35,9 +35,9 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
     
     //#MARK: -
     
-    private func photoSetFromPath(_ path: String) -> NSArray {
+    private func photoSetFromPath(_ path: String) -> [PhotoAnnotation] {
         
-        let photos = NSMutableArray()
+        var photos: [PhotoAnnotation] = []
         
         // The bulk of our work here is going to be loading the files and looking up metadata
         // Thus, we see a major speed improvement by loading multiple photos simultaneously
@@ -68,8 +68,8 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
                     let fileName = photoURL.deletingPathExtension().lastPathComponent
                     let photo = PhotoAnnotation(imagePath: photoURL.path, title: fileName, coordinate: coord)
                     
-                    synchronized(photos) {
-                        photos.add(photo)
+                    synchronized(self) {
+                        photos.append(photo)
                     }
                 }
                 
@@ -94,7 +94,7 @@ class PhotoMapViewController: UIViewController, MKMapViewDelegate {
             self.photos = photos
             
             DispatchQueue.main.async {
-                self.allAnnotationsMapView!.addAnnotations(self.photos as! [MKAnnotation])
+                self.allAnnotationsMapView!.addAnnotations(self.photos)
                 self.updateVisibleAnnotations()
                 
                 loadingStatus.removeFromSuperviewWithFade()

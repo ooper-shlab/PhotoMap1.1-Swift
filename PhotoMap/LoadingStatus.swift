@@ -32,7 +32,7 @@ class LoadingStatus : UIView {
     
     override init(frame: CGRect) {
         
-        let loadingString: NSString = "Loading Photos…"
+        let loadingString = "Loading Photos…"
         
         let loadingFont = UIFont.boldSystemFont(ofSize: 17.0)
         
@@ -49,7 +49,7 @@ class LoadingStatus : UIView {
         loadingLabel = UILabel(frame: CGRect(x: centerX, y: centerY, width: labelSize.width, height: labelSize.height))
         self.loadingLabel.backgroundColor = UIColor.clear
         self.loadingLabel.textColor = UIColor.white
-        self.loadingLabel.text = loadingString as String
+        self.loadingLabel.text = loadingString
         self.loadingLabel.font = loadingFont
         
         progress = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
